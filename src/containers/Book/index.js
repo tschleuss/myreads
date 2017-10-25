@@ -6,11 +6,9 @@ class Book extends Component {
 
   render() {
 
-    const title = this.props.title
-    const authors = this.props.authors || []
-    const imageLinks = this.props.imageLinks || {}
+    const { title = '', width = 128, height = 193, authors = [], imageLinks = {} } = this.props
     const className = classNames({ 'book-cover': true, 'book-no-cover': !imageLinks.thumbnail })
-    const style = { width: 128, height: 193 }
+    const style = { width, height }
 
     if (imageLinks.thumbnail) {
       style.backgroundImage = `url(${imageLinks.thumbnail})`

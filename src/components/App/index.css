@@ -1,9 +1,11 @@
 html, body, .root {
   height: 100%;
 }
+
 body {
   line-height: 1.5;
 }
+
 body, .app {
   background: white;
 }
@@ -15,6 +17,7 @@ body, .app {
   background: #2e7c31;
   text-align: center;
 }
+
 .list-books-title h1 {
   font-weight: 400;
   margin: 0;
@@ -26,28 +29,12 @@ body, .app {
   flex: 1;
 }
 
-.bookshelf {
-  padding: 0 10px 20px;
-}
-
-@media (min-width: 600px) {
-  .bookshelf {
-    padding: 0 20px 40px;
-  }
-}
-
-.bookshelf-title {
-  border-bottom: 1px solid #dedede;
-}
-.bookshelf-books {
-  text-align: center;
-}
-
 .open-search {
   position: fixed;
   right: 25px;
   bottom: 25px;
 }
+
 .open-search a {
   display: block;
   width: 50px;
@@ -73,10 +60,12 @@ body, .app {
   display: flex;
   box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 0 6px rgba(0,0,0,0.23);
 }
+
 .search-books-input-wrapper {
   flex: 1;
   background: #e9e;
 }
+
 .search-books-bar input {
   width: 100%;
   padding: 15px 10px;
@@ -101,22 +90,6 @@ body, .app {
 
 .search-books-results {
   padding: 80px 10px 20px;
-}
-
-/* books grid */
-
-.books-grid {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-.books-grid li {
-  padding: 10px 15px;
-  text-align: left;
 }
 
 /* Spinner */
