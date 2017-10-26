@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import BookShelfChanger from 'containers/BookShelfChanger'
 import classNames from 'classnames'
 import './index.css'
 
@@ -6,8 +7,26 @@ class Book extends Component {
 
   render() {
 
-    const { title = '', width = 128, height = 193, authors = [], imageLinks = {} } = this.props
-    const className = classNames({ 'book-cover': true, 'book-no-cover': !imageLinks.thumbnail })
+    const {
+      data,
+      width = 128,
+      height = 193,
+      onChangeBook = () => { },
+      changeOptions
+    } = this.props
+
+    const {
+      title = '',
+      authors = [],
+      imageLinks = {},
+      shelf = ''
+    } = data
+
+    const className = classNames({
+      'book-cover': true,
+      'book-no-cover': !imageLinks.thumbnail
+    })
+
     const style = { width, height }
 
     if (imageLinks.thumbnail) {
@@ -18,15 +37,12 @@ class Book extends Component {
       <div className="book">
         <div className="book-top">
           <div className={className} style={style}></div>
-          <div className="book-shelf-changer">
-            <select>
-              <option value="none" disabled>Move to...</option>
-              <option value="currentlyReading">Currently Reading</option>
-              <option value="wantToRead">Want to Read</option>
-              <option value="read">Read</option>
-              <option value="none">None</option>
-            </select>
-          </div>
+          {changeOptions && (
+            <BookShelfChanger
+              options={changeOptions}
+              selected={shelf}
+              onChange={e => onChangeBook(data, e.target.value)} />
+          )}
         </div>
         <div className="book-title">{title}</div>
         <div className="book-authors">{authors.join(', ')}</div>
