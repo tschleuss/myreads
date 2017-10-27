@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import spinner from './spinner.svg'
+import './index.css'
 
 class Loading extends Component {
 

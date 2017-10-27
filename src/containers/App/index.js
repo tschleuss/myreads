@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Route, Link } from 'react-router-dom'
 import BookShelf from 'containers/BookShelf'
+import BookSearch from 'containers/BookSearch'
 import Loading from 'components/Loading'
 import * as BooksAPI from 'api/BooksAPI'
 import './index.css'
@@ -46,11 +47,7 @@ class BooksApp extends Component {
    * Usually, it's a book that the view is not aware, so we need to retrieve that information.
    */
   addRemoteBook = (bookId) => {
-    BooksAPI.get(bookId).then(book => {
-      this.setState(state => ({
-        books: state.books[book.shelf].push(book)
-      }))
-    })
+    BooksAPI.get(bookId).then(book => this.addLocalBook(book))
   }
 
   /**
@@ -58,6 +55,7 @@ class BooksApp extends Component {
    * Here we update it state on the server and then update or view.
    */
   onChangeBook = (book, shelf) => {
+    this.checkNewBookFromSearch(book)
     BooksAPI.update(book, shelf).then(shelvesUpdated => {
       this.checkForNewBooksFromServer(shelvesUpdated)
       this.updateBookShelfsWithRemoteData(shelvesUpdated)
@@ -86,6 +84,16 @@ class BooksApp extends Component {
   }
 
   /**
+   * Check if a book exists in local state, if not, we add it.
+   */
+  checkNewBookFromSearch = (changedBook) => {
+    const book = this.state.books.find(book => book.id === changedBook.id)
+    if (!book) {
+      this.addLocalBook(changedBook)
+    }
+  }
+
+  /**
    * When we change a book's shelf the server respond with an updated state of all shelves.
    * If for some reason, like the user is changing his/her books on this page and at the same time
    * is adding new books in another tab, we can identify here that a new book that we don't have loaded in the view was added.
@@ -94,8 +102,9 @@ class BooksApp extends Component {
   checkForNewBooksFromServer = (shelvesUpdated) => {
     const viewBooks = []
     const serverBooks = []
+    const { books } = this.state
     this.getShelvesKeys().forEach(shelf => {
-      this.state.books.forEach(book => viewBooks.push(book.id))
+      books.forEach(book => viewBooks.push(book.id))
       shelvesUpdated[shelf].forEach(id => serverBooks.push(id))
     })
     const newBooks = serverBooks.filter(id => viewBooks.indexOf(id) < 0)
@@ -120,9 +129,19 @@ class BooksApp extends Component {
   }
 
   /**
+   * Add a new book to local state.
+   */
+  addLocalBook = (book) => {
+    this.setState(state => ({
+      books: state.books.concat(book)
+    }))
+  }
+
+  /**
    * Render our component in the view.
    */
   render() {
+    const { showLoading, shelves, books } = this.state
     return (
       <div className="app" >
         <Route exact={true} path="/" render={() => (
@@ -131,17 +150,17 @@ class BooksApp extends Component {
               <h1>MyReads</h1>
             </div>
             <div className="list-books-content">
-              {this.state.showLoading ? (
+              {showLoading ? (
                 <Loading />
               ) : (
                   <div>
-                    {this.state.shelves.map(shelf => (
+                    {shelves.map(shelf => (
                       <BookShelf
                         key={shelf.key}
                         name={shelf.value}
-                        books={this.getBooksForShelf(this.state.books, shelf.key)}
+                        books={this.getBooksForShelf(books, shelf.key)}
                         changeOptions={this.getShelfChangeOptions()}
-                        onChangeBook={this.onChangeBook} />
+                        onChangeBook={(book, shelf) => this.onChangeBook(book, shelf)} />
                     ))}
                   </div>
                 )}
@@ -152,17 +171,10 @@ class BooksApp extends Component {
           </div>
         )} />
         <Route exact={true} path="/search" render={() => (
-          <div className="search-books">
-            <div className="search-books-bar">
-              <Link to="/" className="close-search">Close</Link>
-              <div className="search-books-input-wrapper">
-                <input type="text" placeholder="Search by title or author" />
-              </div>
-            </div>
-            <div className="search-books-results">
-              <ol className="books-grid"></ol>
-            </div>
-          </div>
+          <BookSearch
+            shelvesBooks={books}
+            changeOptions={this.getShelfChangeOptions()}
+            onChangeBook={(book, shelf) => this.onChangeBook(book, shelf)} />
         )} />
       </div>
     )

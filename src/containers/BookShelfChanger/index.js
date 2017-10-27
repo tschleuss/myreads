@@ -4,13 +4,7 @@ import './index.css'
 class BookShelfChanger extends Component {
 
     render() {
-
-        const {
-            options = [],
-            selected = '',
-            onChange
-        } = this.props
-
+        const { options = [], selected = '', onChange } = this.props
         return (
             <div className="book-shelf-changer">
                 <select value={selected} onChange={onChange}>
