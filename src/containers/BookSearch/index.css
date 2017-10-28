@@ -39,7 +39,7 @@
     padding: 80px 10px 20px;
   }
 
-  .search-books-notfound {
+  .search-books-notfound span{
     font-size: 1.25em;
     color: #a0a0a0;
     display: inline-block;

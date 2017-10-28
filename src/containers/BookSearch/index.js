@@ -6,6 +6,10 @@ import Loading from 'components/Loading'
 import * as BooksAPI from 'api/BooksAPI'
 import './index.css'
 
+/**
+ * Represent the book search function in the app.
+ * The search bar as well as the grid of books are created here.
+ */
 class BookSearch extends Component {
 
     state = {
@@ -72,6 +76,9 @@ class BookSearch extends Component {
         })
     }
 
+    /**
+     * Render our component in the view.
+     */
     render() {
 
         const { changeOptions } = this.props
@@ -97,14 +104,17 @@ class BookSearch extends Component {
                             <Loading />
                         )}
                         {emptyResponse && (
-                            <div>
-                                <span className="search-books-notfound">Sorry, no results were found.</span>
-                                <span className="search-books-notfound">¯\_(ツ)_/¯</span>
+                            <div className="search-books-notfound">
+                                <span>Sorry, no results were found.</span>
+                                <span>¯\_(ツ)_/¯</span>
                             </div>
                         )}
                         {books.map(book => (
                             <li key={book.id}>
-                                <Book data={book} onChangeBook={this.onChangeSearchedBook} changeOptions={changeOptions} />
+                                <Book
+                                    data={book}
+                                    onChangeBook={this.onChangeSearchedBook}
+                                    changeOptions={changeOptions} />
                             </li>
                         ))}
                     </ol>

@@ -12,7 +12,8 @@
     "react": "^15.5.4",
     "react-debounce-input": "^3.1.0",
     "react-dom": "^15.5.4",
-    "react-router-dom": "^4.2.2"
+    "react-router-dom": "^4.2.2",
+    "react-toastify": "^2.1.5"
   },
   "devDependencies": {
     "cross-env": "^5.1.0",

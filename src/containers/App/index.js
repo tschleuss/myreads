@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
 import { Route, Link } from 'react-router-dom'
-import BookShelf from 'containers/BookShelf'
 import BookSearch from 'containers/BookSearch'
+import UserLibrary from 'containers/UserLibrary'
 import Loading from 'components/Loading'
 import * as BooksAPI from 'api/BooksAPI'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.min.css'
 import './index.css'
 
 class BooksApp extends Component {
@@ -29,7 +31,8 @@ class BooksApp extends Component {
    * Build and aeeay one with shelves ids.
    */
   getShelvesKeys = () => {
-    return this.state.shelves.map(shelf => shelf.key)
+    const { shelves } = this.state
+    return shelves.map(shelf => shelf.key)
   }
 
   /**
@@ -55,7 +58,7 @@ class BooksApp extends Component {
    * Here we update it state on the server and then update or view.
    */
   onChangeBook = (book, shelf) => {
-    this.checkNewBookFromSearch(book)
+    this.checkNewBookFromSearch(book, shelf)
     BooksAPI.update(book, shelf).then(shelvesUpdated => {
       this.checkForNewBooksFromServer(shelvesUpdated)
       this.updateBookShelfsWithRemoteData(shelvesUpdated)
@@ -69,7 +72,8 @@ class BooksApp extends Component {
    */
   updateBookShelfsWithRemoteData = (shelvesUpdated) => {
     const serverBooks = []
-    this.getShelvesKeys().forEach(shelf => {
+    const shelveKeys = this.getShelvesKeys()
+    shelveKeys.forEach(shelf => {
       shelvesUpdated[shelf].forEach(id => serverBooks.push({ id, shelf }))
     })
     const books = []
@@ -80,16 +84,26 @@ class BooksApp extends Component {
         books.push(viewBook)
       }
     })
-    this.setState({ books })
+    this.setState({ emptyLibrary: books.length === 0, books })
   }
 
   /**
    * Check if a book exists in local state, if not, we add it.
    */
-  checkNewBookFromSearch = (changedBook) => {
+  checkNewBookFromSearch = (changedBook, changedShelf) => {
     const book = this.state.books.find(book => book.id === changedBook.id)
-    if (!book) {
-      this.addLocalBook(changedBook)
+    const shelveKeys = this.getShelvesKeys()
+    if (shelveKeys.includes(changedShelf)) {
+      if (!book) {
+        this.addLocalBook(changedBook)
+      } else {
+        const shelfObj = this.state.shelves.find(el => el.key === changedShelf)
+        toast.info(`The book '${changedBook.title}' was changed to '${shelfObj.value}' successfully`)
+      }
+    } else {
+      if (book) {
+        toast.info(`The book '${changedBook.title}' was removed successfully`)
+      }
     }
   }
 
@@ -100,10 +114,11 @@ class BooksApp extends Component {
    * So here we discover what is the book id and then call the server for that book information.
    */
   checkForNewBooksFromServer = (shelvesUpdated) => {
+    const { books } = this.state
     const viewBooks = []
     const serverBooks = []
-    const { books } = this.state
-    this.getShelvesKeys().forEach(shelf => {
+    const shelveKeys = this.getShelvesKeys()
+    shelveKeys.forEach(shelf => {
       books.forEach(book => viewBooks.push(book.id))
       shelvesUpdated[shelf].forEach(id => serverBooks.push(id))
     })
@@ -125,7 +140,8 @@ class BooksApp extends Component {
    * or disable the shelf changer select in some shelves and so on.
    */
   getShelfChangeOptions = () => {
-    return [...this.state.shelves, { key: 'none', value: 'None' }]
+    const { shelves } = this.state
+    return [...shelves, { key: 'none', value: 'None' }]
   }
 
   /**
@@ -134,14 +150,20 @@ class BooksApp extends Component {
   addLocalBook = (book) => {
     this.setState(state => ({
       books: state.books.concat(book)
-    }))
+    }), () => {
+      toast.info(`The book '${book.title}' was added successfully`)
+    })
   }
 
   /**
    * Render our component in the view.
    */
   render() {
+
     const { showLoading, shelves, books } = this.state
+    const showEmptyLibrary = !showLoading && books.length === 0
+    const showLibrary = !showLoading && !showEmptyLibrary
+
     return (
       <div className="app" >
         <Route exact={true} path="/" render={() => (
@@ -149,21 +171,23 @@ class BooksApp extends Component {
             <div className="list-books-title">
               <h1>MyReads</h1>
             </div>
-            <div className="list-books-content">
-              {showLoading ? (
+            <div>
+              {showLoading && (
                 <Loading />
-              ) : (
-                  <div>
-                    {shelves.map(shelf => (
-                      <BookShelf
-                        key={shelf.key}
-                        name={shelf.value}
-                        books={this.getBooksForShelf(books, shelf.key)}
-                        changeOptions={this.getShelfChangeOptions()}
-                        onChangeBook={(book, shelf) => this.onChangeBook(book, shelf)} />
-                    ))}
-                  </div>
-                )}
+              )}
+              {showEmptyLibrary && (
+                <div className="empty-library">
+                  <span>Seems that your library is empty!</span>
+                  <span>Click on the + button below to add some.</span>
+                </div>
+              )}
+              {showLibrary && (
+                <UserLibrary
+                  shelves={shelves}
+                  books={books}
+                  changeOptions={this.getShelfChangeOptions()}
+                  onChangeBook={(book, shelf) => this.onChangeBook(book, shelf)} />
+              )}
             </div>
             <div className="open-search">
               <Link to="/search">Add a book</Link>
@@ -176,6 +200,11 @@ class BooksApp extends Component {
             changeOptions={this.getShelfChangeOptions()}
             onChangeBook={(book, shelf) => this.onChangeBook(book, shelf)} />
         )} />
+        <ToastContainer
+          position="bottom-left"
+          hideProgressBar={true}
+          newestOnTop={true}
+        />
       </div>
     )
   }

@@ -14,17 +14,13 @@ body, .app {
   padding: 10px 0;
   background: #2e7c31;
   text-align: center;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23)
 }
 
 .list-books-title h1 {
   font-weight: 400;
   margin: 0;
   color: white;
-}
-
-.list-books-content {
-  padding: 0 0 80px;
-  flex: 1;
 }
 
 .open-search {
@@ -45,4 +41,16 @@ body, .app {
   background-size: 28px;
   box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
   font-size: 0;
+}
+
+.empty-library {
+  margin-top: 40px;
+}
+
+.empty-library span {
+  font-size: 1.25em;
+  color: #a0a0a0;
+  display: inline-block;
+  text-align: center;
+  width: 100%;
 }

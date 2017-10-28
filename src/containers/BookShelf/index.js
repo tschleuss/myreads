@@ -2,8 +2,14 @@ import React, { Component } from 'react'
 import Book from 'containers/Book'
 import './index.css'
 
+/**
+ * Represent a specific shelf type with books on the app.
+ */
 class BookShelf extends Component {
 
+    /**
+     * Render our component in the view.
+     */
     render() {
 
         const {
