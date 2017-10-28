@@ -1,4 +1,4 @@
-# MyReads Project
+# [React Nanodegree Project #1] MyReads
 
 To get started:
 
