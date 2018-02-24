@@ -5,7 +5,6 @@ import UserLibrary from 'containers/UserLibrary'
 import Loading from 'components/Loading'
 import * as BooksAPI from 'api/BooksAPI'
 import { ToastContainer, toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.min.css'
 import './index.css'
 
 class BooksApp extends Component {

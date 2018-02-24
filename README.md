@@ -1,4 +1,6 @@
-# [React Nanodegree Project #1] MyReads
+# MyReads
+
+> Project #1 done for Udacity React Nanodegree.
 
 To get started:
 

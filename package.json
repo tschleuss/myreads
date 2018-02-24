@@ -1,28 +1,28 @@
 {
-  "name": "reactnd-project-myreads",
-  "version": "0.0.1",
-  "author": {
-    "name": "Thyago Schleuss",
-    "email": "tschleuss@gmail.com"
-  },
-  "license": "ISC",
-  "dependencies": {
-    "classnames": "^2.2.5",
-    "prop-types": "^15.5.8",
-    "react": "^15.5.4",
-    "react-debounce-input": "^3.1.0",
-    "react-dom": "^15.5.4",
-    "react-router-dom": "^4.2.2",
-    "react-toastify": "^2.1.5"
-  },
-  "devDependencies": {
-    "cross-env": "^5.1.0",
-    "react-scripts": "0.9.5"
-  },
-  "scripts": {
-    "start": "cross-env NODE_PATH=src react-scripts start",
-    "build": "react-scripts build",
-    "test": "cross-env NODE_PATH=src react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
-  }
+    "name": "reactnd-project-myreads",
+    "version": "0.0.1",
+    "author": {
+        "name": "Thyago Schleuss",
+        "email": "tschleuss@gmail.com"
+    },
+    "license": "ISC",
+    "dependencies": {
+        "classnames": "^2.2.5",
+        "prop-types": "^15.5.8",
+        "react": "^15.5.4",
+        "react-debounce-input": "^3.1.0",
+        "react-dom": "^15.5.4",
+        "react-router-dom": "^4.2.2",
+        "react-toastify": "^3.3.4"
+    },
+    "devDependencies": {
+        "cross-env": "^5.1.0",
+        "react-scripts": "0.9.5"
+    },
+    "scripts": {
+        "start": "cross-env NODE_PATH=src react-scripts start",
+        "build": "react-scripts build",
+        "test": "cross-env NODE_PATH=src react-scripts test --env=jsdom",
+        "eject": "react-scripts eject"
+    }
 }
